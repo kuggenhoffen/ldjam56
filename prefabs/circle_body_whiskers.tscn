@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://dsnbjcg6nqkuo"]
+
+[ext_resource type="Script" path="res://scripts/BodySegment.gd" id="1_r51ej"]
+[ext_resource type="Script" path="res://scripts/Rope.gd" id="2_2381a"]
+[ext_resource type="Texture2D" uid="uid://bvvglpx1lrf1f" path="res://textures/circle.tres" id="3_0nf72"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mqjuc"]
+radius = 28.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uq2gw"]
+radius = 28.0
+
+[node name="BodySegment" type="CollisionShape2D"]
+top_level = true
+shape = SubResource("CircleShape2D_mqjuc")
+script = ExtResource("1_r51ej")
+segment_scale = 1.0
+metadata/_edit_vertical_guides_ = [nan, nan, nan]
+metadata/_edit_horizontal_guides_ = [nan, nan, nan]
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(0, 24)
+rotation = 1.5708
+script = ExtResource("2_2381a")
+segment_length = 10.0
+segment_count = 5
+
+[node name="Node2D2" type="Node2D" parent="."]
+position = Vector2(0, -24)
+rotation = -1.5708
+script = ExtResource("2_2381a")
+segment_length = 10.0
+segment_count = 5
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_0nf72")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_uq2gw")

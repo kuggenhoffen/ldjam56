@@ -1,0 +1,86 @@
+[gd_scene load_steps=10 format=3 uid="uid://mhvtdxxfdxi5"]
+
+[ext_resource type="PackedScene" uid="uid://dsnbjcg6nqkuo" path="res://prefabs/circle_body_whiskers.tscn" id="3_i0hql"]
+[ext_resource type="Script" path="res://scripts/MultiBody.gd" id="4_1bjcj"]
+[ext_resource type="Script" path="res://scripts/Creature.gd" id="4_i01o4"]
+
+[sub_resource type="Curve" id="Curve_7qop1"]
+max_value = 32.0
+_data = [Vector2(0.0105263, 10.9011), 0.0, 75.5279, 0, 0, Vector2(0.442105, 20.7473), 6.07393, 6.07393, 0, 0, Vector2(0.973684, 20.7473), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_yp4jo"]
+_data = [Vector2(0, 1), 0.0, 0.0396438, 0, 0, Vector2(1, 0.5), -1.87912, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_acqky"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.577922, 0.61039, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0.407843, 0.407843, 0.407843, 0, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gbk1n"]
+gradient = SubResource("Gradient_acqky")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Curve" id="Curve_u78xe"]
+max_value = 32.0
+_data = [Vector2(0, 15.4725), 0.0, 13.9194, 0, 0, Vector2(0.531579, 16.1758), 6.07393, 6.07393, 0, 0, Vector2(1, 16.5275), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_w61y8"]
+_data = [Vector2(0, 0.681319), 0.0, 0.0396438, 0, 0, Vector2(1, 0.5), -1.87912, 0.0, 0, 0]
+point_count = 2
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Node2D" type="Node2D" parent="." node_paths=PackedStringArray("body_object")]
+position = Vector2(277, 230)
+script = ExtResource("4_i01o4")
+body_object = NodePath("Body")
+
+[node name="Body" type="Node2D" parent="Node2D" node_paths=PackedStringArray("body_parts")]
+script = ExtResource("4_1bjcj")
+body_parts = [NodePath("BodyPart5"), NodePath("BodyPart1"), NodePath("BodyPart2")]
+part_count = 3
+body_offset = SubResource("Curve_7qop1")
+body_scale = SubResource("Curve_yp4jo")
+
+[node name="BodyPart5" parent="Node2D/Body" instance=ExtResource("3_i0hql")]
+position = Vector2(277, 230)
+scale = Vector2(1.04116, 0.934137)
+texture = SubResource("GradientTexture2D_gbk1n")
+segment_offset = 10.9011
+
+[node name="BodyPart1" parent="Node2D/Body" instance=ExtResource("3_i0hql")]
+position = Vector2(255.973, 230)
+scale = Vector2(0.950166, 1.05333)
+animation_offset = 3.08674
+segment_offset = 21.0265
+segment_scale = 0.989845
+
+[node name="BodyPart2" parent="Node2D/Body" instance=ExtResource("3_i0hql")]
+position = Vector2(235.505, 230)
+scale = Vector2(0.457831, 0.567471)
+animation_offset = 3.18158
+segment_offset = 20.7473
+segment_scale = 0.5
+
+[node name="Node2D2" type="Node2D" parent="." node_paths=PackedStringArray("body_object")]
+position = Vector2(347, 391)
+script = ExtResource("4_i01o4")
+body_object = NodePath("Body")
+
+[node name="Body" type="Node2D" parent="Node2D2" node_paths=PackedStringArray("body_parts")]
+script = ExtResource("4_1bjcj")
+body_parts = [NodePath("BodyPart0")]
+part_count = 1
+body_offset = SubResource("Curve_u78xe")
+body_scale = SubResource("Curve_w61y8")
+
+[node name="BodyPart0" parent="Node2D2/Body" instance=ExtResource("3_i0hql")]
+position = Vector2(nan, 391)
+scale = Vector2(nan, nan)
+animation_offset = nan
+segment_offset = nan
+segment_scale = nan

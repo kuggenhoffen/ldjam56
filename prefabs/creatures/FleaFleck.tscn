@@ -1,0 +1,117 @@
+[gd_scene load_steps=9 format=3 uid="uid://24mdf5q82px2"]
+
+[ext_resource type="Script" path="res://scripts/FleaFleck.gd" id="1_g8704"]
+[ext_resource type="PackedScene" uid="uid://1p54ak7pjy6x" path="res://prefabs/circle_body_plain.tscn" id="3_6repn"]
+[ext_resource type="Script" path="res://scripts/DashMovement.gd" id="4_vbsgq"]
+
+[sub_resource type="Curve" id="Curve_sa5nw"]
+_data = [Vector2(0, 12), 0.0, 0.0, 0, 0, Vector2(1, 12), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_6r1tf"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j846n"]
+radius = 56.5
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_s3j7b"]
+radius = 51.57
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g4le0"]
+radius = 28.0
+
+[node name="FleaFleck" type="CharacterBody2D" node_paths=PackedStringArray("body_parts", "consume_shape_casts", "search_shape_casts")]
+position = Vector2(589, 230)
+collision_layer = 2
+input_pickable = true
+motion_mode = 1
+script = ExtResource("1_g8704")
+min_scale = 0.2
+max_scale = 0.8
+body_parts = [NodePath("BodyPart0"), NodePath("BodyPart1"), NodePath("BodyPart2")]
+body_part_prefab = ExtResource("3_6repn")
+part_count = 3
+body_offset = SubResource("Curve_sa5nw")
+body_scale = SubResource("Curve_6r1tf")
+consume_shape_casts = [NodePath("MidCast")]
+search_shape_casts = [NodePath("LeftCast"), NodePath("RightCast")]
+consume_shape_cast_for_search = true
+
+[node name="Movement" type="Node" parent="." node_paths=PackedStringArray("creature")]
+script = ExtResource("4_vbsgq")
+creature = NodePath("..")
+
+[node name="LeftLine" type="Line2D" parent="."]
+visible = false
+position = Vector2(9, -5)
+rotation = -0.560352
+points = PackedVector2Array(0, 0, 34.8626, 6.5271)
+width = 3.93
+
+[node name="RightLine" type="Line2D" parent="."]
+visible = false
+position = Vector2(9, 5)
+rotation = -0.560352
+points = PackedVector2Array(0, 0, 19.6654, 28.8665)
+width = 3.93
+
+[node name="MidLine" type="Line2D" parent="."]
+visible = false
+position = Vector2(7, 0)
+rotation = -0.560352
+points = PackedVector2Array(0, 0, 38.9651, 24.4483)
+width = 3.93
+
+[node name="MidCast" type="ShapeCast2D" parent="."]
+position = Vector2(52, 0)
+shape = SubResource("CircleShape2D_j846n")
+target_position = Vector2(153, 0)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="LeftCast" type="ShapeCast2D" parent="."]
+position = Vector2(59, -31)
+shape = SubResource("CircleShape2D_s3j7b")
+target_position = Vector2(96, -46)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="RightCast" type="ShapeCast2D" parent="."]
+position = Vector2(59, 31)
+shape = SubResource("CircleShape2D_s3j7b")
+target_position = Vector2(96, 46)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="BodyPart0" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_6repn")]
+position = Vector2(589, 230)
+scale = Vector2(0.2, 0.2)
+shape = SubResource("CircleShape2D_g4le0")
+creature = NodePath("..")
+segment_offset = 2.4
+segment_scale = 0.2
+metadata/_edit_vertical_guides_ = [nan, nan, nan]
+metadata/_edit_horizontal_guides_ = [nan, nan, nan]
+
+[node name="BodyPart1" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_6repn")]
+position = Vector2(577, 230)
+scale = Vector2(0.2, 0.2)
+shape = SubResource("CircleShape2D_g4le0")
+creature = NodePath("..")
+animation_offset = 2.32642
+segment_offset = 2.4
+segment_scale = 0.2
+metadata/_edit_vertical_guides_ = [nan, nan, nan]
+metadata/_edit_horizontal_guides_ = [nan, nan, nan]
+
+[node name="BodyPart2" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_6repn")]
+position = Vector2(565, 230)
+scale = Vector2(0.2, 0.2)
+shape = SubResource("CircleShape2D_g4le0")
+creature = NodePath("..")
+animation_offset = 4.77707
+segment_offset = 2.4
+segment_scale = 0.2
+metadata/_edit_vertical_guides_ = [nan, nan, nan]
+metadata/_edit_horizontal_guides_ = [nan, nan, nan]

@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://cl74crm2ckvlc"]
+
+[ext_resource type="Script" path="res://scripts/WeeWiggler.gd" id="1_d0duy"]
+[ext_resource type="PackedScene" uid="uid://1p54ak7pjy6x" path="res://prefabs/circle_body_plain.tscn" id="3_ee1qg"]
+[ext_resource type="Script" path="res://scripts/RandomMovement.gd" id="4_co703"]
+[ext_resource type="Script" path="res://scripts/DashMovement.gd" id="4_s5fln"]
+
+[sub_resource type="Curve" id="Curve_sftge"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 1, Vector2(1, 1), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_fyjfh"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 1, Vector2(1, 1), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g4le0"]
+radius = 28.0
+
+[node name="WeeWiggler" type="CharacterBody2D" node_paths=PackedStringArray("body_parts")]
+position = Vector2(340, 223)
+collision_layer = 2
+input_pickable = true
+motion_mode = 1
+script = ExtResource("1_d0duy")
+body_parts = [NodePath("BodyPart0")]
+body_part_prefab = ExtResource("3_ee1qg")
+part_count = 1
+body_offset = SubResource("Curve_sftge")
+body_scale = SubResource("Curve_fyjfh")
+
+[node name="Movement" type="Node" parent="." node_paths=PackedStringArray("creature")]
+script = ExtResource("4_co703")
+creature = NodePath("..")
+
+[node name="BodyPart0" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_ee1qg")]
+position = Vector2(340, 223)
+scale = Vector2(0.0938693, 0.0938693)
+shape = SubResource("CircleShape2D_g4le0")
+creature = NodePath("..")
+segment_offset = 0.0938693
+segment_scale = 0.0938693
+metadata/_edit_vertical_guides_ = [nan, nan, nan]
+metadata/_edit_horizontal_guides_ = [nan, nan, nan]
+
+[node name="SecondaryMovement" type="Node" parent="." node_paths=PackedStringArray("creature")]
+script = ExtResource("4_s5fln")
+creature = NodePath("..")
