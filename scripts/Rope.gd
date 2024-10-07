@@ -1,5 +1,5 @@
 @tool
-extends Node2D
+extends Line2D
 
 var segments: Array[RopeSegment] = []
 var animation_offset: float = 0.0
@@ -10,18 +10,18 @@ var base_scale: float = 1.0
 		return segment_length
 	set(value):
 		var new_value: bool = value != segment_length
+		segment_length = value
 		if new_value:
 			update_segments()
-		segment_length = value
 
 @export var segment_count: int:
 	get:
 		return segment_count
 	set(value):
 		var new_value: bool = value != segment_count
+		segment_count = value
 		if new_value:
 			update_segments()
-		segment_count = value
 
 
 
@@ -29,13 +29,15 @@ var base_scale: float = 1.0
 func _ready():
 	update_segments()
 
+
 var last_update: float = 0.0
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if true: #Engine.is_editor_hint() or Time.get_ticks_msec() > last_update + 20:
-		process_segments()
+	process_segments()
+	update_line_points()
+	if Engine.is_editor_hint():
 		queue_redraw()
-		last_update = Time.get_ticks_msec()
+	last_update = Time.get_ticks_msec()
 
 
 func update_properties(bscale: float, anim_offset: float):
@@ -51,19 +53,30 @@ func process_segments():
 		parent_position = segment.position
 
 
+func update_line_points():
+	var old_points: PackedVector2Array = points
+	if old_points.size() != segment_count + 1:
+		old_points.resize(segment_count + 1)
+	old_points[0] = Vector2.ZERO
+	for i in range(segments.size()):
+		old_points[i + 1] = to_local(segments[i].position)
+	set_points(old_points)
+	
+
 func update_segments():
 	# Define points for segments
 	segments.clear()
+	segments.resize(segment_count)
 	var parent_position: Vector2 = global_position
 	var scaled_segment_length: float = segment_length * base_scale
 	for i in range(segment_count):
 		parent_position = parent_position + Vector2.RIGHT * scaled_segment_length
 		var new_segment: RopeSegment = RopeSegment.new(1.0, scaled_segment_length, 1.0 * i / segment_count, parent_position)
-		segments.append(new_segment)
-
+		segments[i] = new_segment
+	update_line_points()
 
 func _draw():
-	if false and not Engine.is_editor_hint():
+	if not Engine.is_editor_hint():
 		return
 	
 	var segment_position: Vector2 = Vector2.ZERO

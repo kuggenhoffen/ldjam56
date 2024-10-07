@@ -2,6 +2,12 @@
 extends CharacterBody2D
 class_name Creature
 
+enum SizeLevel {
+	SMALL,
+	MEDIUM,
+	LARGE
+}
+
 @export var body_parts: Array[BodySegment]
 
 @export var body_part_prefab: PackedScene
@@ -10,7 +16,6 @@ class_name Creature
 		return part_count
 	set(value):
 		if value >= 0:
-			print("Setting value: ", value)
 			part_count = value
 			if Engine.is_editor_hint():
 				update_body_parts()
@@ -42,17 +47,37 @@ var game_manager: GameManager
 @export var consume_shape_casts: Array[ShapeCast2D]
 @export var search_shape_casts: Array[ShapeCast2D]
 @export var consume_shape_cast_for_search: bool = false
+var is_dragging: bool = false
+var size_level: SizeLevel = SizeLevel.SMALL:
+	get:
+		return size_level
+	set(value):
+		size_level = value
+		if game_manager:
+			game_manager.creature_size_changed(self)
+var lifetime: float = 30
+var is_dead: bool = false
+var levels: Array = [0.0]
+var creature_type_index: int
+var consumed_creatures_count: int = 0
+
+const max_lifetimes: Array = [30, 60, 120]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	size_level = SizeLevel.values()[levels.bsearch(base_scale)]
+	lifetime = max_lifetimes[size_level]
 	target_position = global_position
 	var areas = find_children("*", "Area2D")
 	for area in areas:
+		area.input_pickable = true
+		area.mouse_entered.connect(_mouse_enter)
+		area.mouse_exited.connect(_mouse_exit)
 		for cast in consume_shape_casts:
 			cast.add_exception(area)
 		for cast in search_shape_casts:
 			cast.add_exception(area)
-	game_manager = get_node("/root/GameManager")
+	game_manager = get_node_or_null("/root/GameManager")
 
 
 func set_target_position(position: Vector2):
@@ -61,8 +86,7 @@ func set_target_position(position: Vector2):
 
 func creature_update():
 	update_body_properties()
-	pass
-	#update_body_part_count(part_count)
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -84,22 +108,49 @@ func _process(delta):
 		follow_position = body.global_position
 
 
-func check_consume_shapecast(consume_types: Array[Variant], consume_distance: float, single: bool = false) -> int:
+func _physics_process(delta):
+	lifetime -= delta
+	if lifetime <= 0 and !is_dead:
+		is_dead = true
+		game_manager.creature_died(self)
+		update_body_properties()
+	var modulate_amount: float = 1.0 - clampf(lifetime / max_lifetimes[0], 0.3, 1.0)
+	modulate = Color(1, 1, 1, 1).lerp(Color(0, 0, 0, 1), modulate_amount)
+	update_body_modulate()
+
+
+func check_consume_shapecast(consume_types: Array[Variant], consume_distance: float, single: bool = false, max_consume_size: SizeLevel = SizeLevel.SMALL) -> int:
 	var close_creature: Creature = null
 	var consumed: int = 0
+	if consume_types.is_empty():
+		return 0
 	for cast in consume_shape_casts:
 		if cast.is_colliding():
 			close_creature = get_closest_creature_from_shape_cast(cast, consume_types)
-			if close_creature and global_position.distance_squared_to(close_creature.global_position) < consume_distance:
-				close_creature.queue_free()
-				close_creature = null
+			if close_creature and not close_creature.is_dragging and global_position.distance_squared_to(close_creature.global_position) < consume_distance:
+				if close_creature.size_level > max_consume_size:
+					continue
+				consume_creature(close_creature)
 				consumed += 1
 				if single:
 					break
 	return consumed
 
 
+func consume_creature(creature: Creature):
+	creature.queue_free()
+	creature = null
+	lifetime += 10
+	if lifetime > max_lifetimes[size_level]:
+		lifetime = max_lifetimes[size_level]
+	consumed_creatures_count += 1
+	if size_level == SizeLevel.LARGE and consumed_creatures_count % 5 == 0:
+		game_manager.spawn_offspring(self)
+
+
 func check_search_shapecast(search_types: Array[Variant], search_distance: float) -> Creature:
+	if search_types.is_empty():
+		return null
 	var close_creature: Creature = null
 	var shape_casts: Array[ShapeCast2D] = search_shape_casts.duplicate()
 	if consume_shape_cast_for_search:
@@ -133,8 +184,6 @@ func get_closest_creature_from_shape_cast(cast: ShapeCast2D, creature_types: Arr
 func update_body_parts():
 	if not Engine.is_editor_hint() or get_tree() == null or get_tree().get_edited_scene_root() != self:
 		return
-	print("Updating body count, new count: ", part_count, ", old: ", body_parts.size())
-	print("Child count: ", get_child_count())
 	for i in range(get_child_count() - 1, -1, -1):
 		if get_child(i) is BodySegment:
 			var to_remove = get_child(i)
@@ -142,7 +191,6 @@ func update_body_parts():
 			to_remove.free()
 	body_parts.clear()
 	for i in part_count:
-		print("Add body")
 		var new_body_part = body_part_prefab.instantiate()
 		new_body_part.name = "BodyPart" + str(body_parts.size())
 		new_body_part.creature = self
@@ -153,7 +201,6 @@ func update_body_parts():
 
 
 func update_body_properties():
-	#print("Update body properties, scale: ", base_scale, " parts: ", body_parts.size())
 	for i in body_parts.size():
 		var sample_pos: float = (float)(i) / (body_parts.size() - 1)
 		if body_parts.size() == 1:
@@ -164,7 +211,12 @@ func update_body_properties():
 		if Engine.is_editor_hint():
 			body_parts[i].position = global_position + Vector2(-i * body_offset.sample(sample_pos), 0)
 		body_parts[i].update_body_properties()
-		#print("segment_scale: ", body_parts[i].segment_scale, ", (body scale: ", body_scale.sample(sample_pos), ")")
+		body_parts[i].animate = (lifetime > 0)
+
+
+func update_body_modulate():
+	for body in body_parts:
+		body.modulate = modulate
 
 
 func request_update_body_properties():
@@ -186,10 +238,8 @@ func outside_of_play_area():
 
 
 func _mouse_enter():
-	print("Mouse enter")
 	game_manager.mouse_active_target_enter(self)
 
 
 func _mouse_exit():
-	print("Mouse exit")
 	game_manager.mouse_active_target_exit(self)

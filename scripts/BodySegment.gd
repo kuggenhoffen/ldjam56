@@ -16,7 +16,6 @@ class_name BodySegment
 
 func update_body_properties():
     scale = Vector2.ONE * segment_scale
-    print("Updating body properties, scale is now: ", segment_scale)
     for child in get_children():
         if child.has_method("update_properties"):
             child.update_properties(segment_scale, animation_offset)

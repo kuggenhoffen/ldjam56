@@ -8,26 +8,24 @@ class_name FleaFleck
 @onready var left_cast: ShapeCast2D = $LeftCast
 @onready var right_cast: ShapeCast2D = $RightCast
 
-@onready var left_line: Line2D = $LeftLine
-@onready var right_line: Line2D = $RightLine
-@onready var mid_line: Line2D = $MidLine
-
 var viewport: Rect2
 var direction_change_time: float = randf() * 2000
 @export var min_scale: float = 0.1
 @export var max_scale: float = 0.4
 @export var min_speed: float = 100.0
-@export var max_speed: float = 300.0
+@export var max_speed: float = 150.0
 var speed: float = min_speed + randf() * (max_speed - min_speed)
 var next_target_position: Vector2
 var go_for_target_position: bool = false
+const size_levels: Array = [0.4, 0.7]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	super._ready()
+	levels = size_levels
 	base_scale = min_scale
 	movement.creature = self
 	viewport = get_viewport_rect()
+	super._ready()
 	random_heading()
 	creature_update()
 
@@ -39,11 +37,10 @@ func _process(delta):
 	if Engine.is_editor_hint():
 		return
 	movement.do_movement(delta)
-	if global_position.distance_squared_to(next_target_position) <= 2.0 :
+	if global_position.distance_squared_to(next_target_position) <= 2.0:
 		go_for_target_position = false
 	if movement.velocity.length_squared() < 0.1 and (Time.get_ticks_msec() > direction_change_time):
 		if go_for_target_position:
-			print("Going for target position at ", next_target_position)
 			movement.target_heading = (next_target_position - global_position).normalized()
 		elif not viewport.has_point(global_position):
 			random_heading()
@@ -56,18 +53,17 @@ func _process(delta):
 func _physics_process(delta):
 	if Engine.is_editor_hint():
 		return
+	super._physics_process(delta)
+	if is_dragging or lifetime <= 0:
+		return
+		
 	move_and_slide()
-	queue_redraw()
-
-	left_line.default_color = Color(1, 0, 0) if left_cast.is_colliding() else Color(0, 1, 0)
-	right_line.default_color = Color(1, 0, 0) if right_cast.is_colliding() else Color(0, 1, 0)
-	mid_line.default_color = Color(1, 0, 0) if mid_cast.is_colliding() else Color(0, 1, 0)
-
-	if check_consume_shapecast([WeeWiggler], 100, true) > 0:
-		print("FleaFleck consumed WeeWiggler")
+	var consume_level: SizeLevel = SizeLevel.MEDIUM if size_level == SizeLevel.LARGE else SizeLevel.SMALL 
+	if check_consume_shapecast([WeeWiggler], 100, true, size_level) > 0:
 		base_scale += 0.02
 		if base_scale > max_scale:
 			base_scale = max_scale
+		size_level = SizeLevel.values()[levels.bsearch(base_scale)]
 		creature_update()
 
 	var closest_creature: Creature = check_search_shapecast([WeeWiggler], 1e6)
@@ -85,5 +81,6 @@ func random_position_in_viewport():
 	viewport.grow(-viewport.size.y / 20)
 	return viewport.position + viewport.size * Vector2(randf(), randf())
 
-func _draw():
-	draw_line(Vector2(0, 0), next_target_position * transform, Color(0, 0, 1))
+
+func get_creature_name():
+	return "FleaFleck"

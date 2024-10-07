@@ -1,86 +1,171 @@
-[gd_scene load_steps=10 format=3 uid="uid://mhvtdxxfdxi5"]
+[gd_scene load_steps=12 format=3 uid="uid://825auspdolux"]
 
-[ext_resource type="PackedScene" uid="uid://dsnbjcg6nqkuo" path="res://prefabs/circle_body_whiskers.tscn" id="3_i0hql"]
-[ext_resource type="Script" path="res://scripts/MultiBody.gd" id="4_1bjcj"]
-[ext_resource type="Script" path="res://scripts/Creature.gd" id="4_i01o4"]
+[ext_resource type="Script" path="res://scripts/GameManager.gd" id="1_ukcxh"]
+[ext_resource type="PackedScene" uid="uid://cl74crm2ckvlc" path="res://prefabs/creatures/WeeWiggler.tscn" id="2_kocso"]
+[ext_resource type="StyleBox" uid="uid://cb8acbvyiimdt" path="res://misc/button_stylebox.tres" id="5_4mrom"]
+[ext_resource type="Script" path="res://scripts/HelpLabel.gd" id="5_55550"]
+[ext_resource type="Texture2D" uid="uid://bwgxu8qysmamp" path="res://sprites/info.png" id="5_p8etf"]
+[ext_resource type="Script" path="res://scripts/background.gd" id="6_r6824"]
+[ext_resource type="Script" path="res://scripts/CreatureEmitter.gd" id="8_efa28"]
 
-[sub_resource type="Curve" id="Curve_7qop1"]
-max_value = 32.0
-_data = [Vector2(0.0105263, 10.9011), 0.0, 75.5279, 0, 0, Vector2(0.442105, 20.7473), 6.07393, 6.07393, 0, 0, Vector2(0.973684, 20.7473), 0.0, 0.0, 0, 0]
-point_count = 3
+[sub_resource type="Animation" id="Animation_fpk0c"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UnlockLabelContainer/UnlockedLabel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(173, 6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UnlockLabelContainer/UnlockedLabel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
 
-[sub_resource type="Curve" id="Curve_yp4jo"]
-_data = [Vector2(0, 1), 0.0, 0.0396438, 0, 0, Vector2(1, 0.5), -1.87912, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="Animation" id="Animation_0giqb"]
+resource_name = "Unlocked"
+length = 15.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("UnlockLabelContainer/UnlockedLabel:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.2, 0.4, 0.6, 0.8, 1, 2.2, 2.4, 2.6, 2.8, 3, 4, 4.2, 4.4, 4.6, 4.8, 6, 6.2, 6.4, 6.6, 6.8, 8, 8.2, 8.4, 8.6, 8.8, 10, 10.2, 10.4, 10.6, 10.8, 12, 12.2, 12.4, 12.6, 12.8),
+"transitions": PackedFloat32Array(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2),
+"update": 0,
+"values": [Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6), Vector2(165, 6), Vector2(173, 6)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("UnlockLabelContainer/UnlockedLabel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.2, 14, 14.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
 
-[sub_resource type="Gradient" id="Gradient_acqky"]
-interpolation_mode = 2
-offsets = PackedFloat32Array(0, 0.577922, 0.61039, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 1, 0.407843, 0.407843, 0.407843, 0, 1, 1, 1, 0)
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_p204v"]
+_data = {
+"RESET": SubResource("Animation_fpk0c"),
+"Unlocked": SubResource("Animation_0giqb")
+}
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_gbk1n"]
-gradient = SubResource("Gradient_acqky")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4ybjt"]
 
-[sub_resource type="Curve" id="Curve_u78xe"]
-max_value = 32.0
-_data = [Vector2(0, 15.4725), 0.0, 13.9194, 0, 0, Vector2(0.531579, 16.1758), 6.07393, 6.07393, 0, 0, Vector2(1, 16.5275), 0.0, 0.0, 0, 0]
-point_count = 3
+[node name="GameManager" type="Node2D"]
+process_mode = 1
+script = ExtResource("1_ukcxh")
 
-[sub_resource type="Curve" id="Curve_w61y8"]
-_data = [Vector2(0, 0.681319), 0.0, 0.0396438, 0, 0, Vector2(1, 0.5), -1.87912, 0.0, 0, 0]
-point_count = 2
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1056.0
+offset_bottom = 829.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
+color = Color(0, 0, 0, 1)
+script = ExtResource("6_r6824")
 
-[node name="Node2D" type="Node2D"]
+[node name="DragGraceTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
 
-[node name="Node2D" type="Node2D" parent="." node_paths=PackedStringArray("body_object")]
-position = Vector2(277, 230)
-script = ExtResource("4_i01o4")
-body_object = NodePath("Body")
+[node name="WigglerSpawnTimer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
 
-[node name="Body" type="Node2D" parent="Node2D" node_paths=PackedStringArray("body_parts")]
-script = ExtResource("4_1bjcj")
-body_parts = [NodePath("BodyPart5"), NodePath("BodyPart1"), NodePath("BodyPart2")]
-part_count = 3
-body_offset = SubResource("Curve_7qop1")
-body_scale = SubResource("Curve_yp4jo")
+[node name="DeadCreatureEmitter" type="Node" parent="."]
+script = ExtResource("8_efa28")
+creature_prefab = ExtResource("2_kocso")
 
-[node name="BodyPart5" parent="Node2D/Body" instance=ExtResource("3_i0hql")]
-position = Vector2(277, 230)
-scale = Vector2(1.04116, 0.934137)
-texture = SubResource("GradientTexture2D_gbk1n")
-segment_offset = 10.9011
+[node name="HelpLabel" type="Label" parent="."]
+process_mode = 3
+offset_left = 28.0
+offset_top = 156.0
+offset_right = 494.0
+offset_bottom = 309.0
+text = "Nibblers
 
-[node name="BodyPart1" parent="Node2D/Body" instance=ExtResource("3_i0hql")]
-position = Vector2(255.973, 230)
-scale = Vector2(0.950166, 1.05333)
-animation_offset = 3.08674
-segment_offset = 21.0265
-segment_scale = 0.989845
+Left click to spawn and drag creatures.
+Mouse scroll or tab to switch selected creature (see top left).
+Space to spawn in random location.
+I or hover over top left for info.
+ESC to exit.
 
-[node name="BodyPart2" parent="Node2D/Body" instance=ExtResource("3_i0hql")]
-position = Vector2(235.505, 230)
-scale = Vector2(0.457831, 0.567471)
-animation_offset = 3.18158
-segment_offset = 20.7473
-segment_scale = 0.5
+P to start (and pause)"
+script = ExtResource("5_55550")
 
-[node name="Node2D2" type="Node2D" parent="." node_paths=PackedStringArray("body_object")]
-position = Vector2(347, 391)
-script = ExtResource("4_i01o4")
-body_object = NodePath("Body")
+[node name="TargetCreatureLabel" type="Label" parent="."]
+offset_left = 127.0
+offset_top = 109.0
+offset_right = 266.0
+offset_bottom = 132.0
+text = "Large WeeWiggler"
 
-[node name="Body" type="Node2D" parent="Node2D2" node_paths=PackedStringArray("body_parts")]
-script = ExtResource("4_1bjcj")
-body_parts = [NodePath("BodyPart0")]
-part_count = 1
-body_offset = SubResource("Curve_u78xe")
-body_scale = SubResource("Curve_w61y8")
+[node name="UnlockLabelContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 179.0
+offset_top = 6.0
+offset_right = 179.0
+offset_bottom = 6.0
 
-[node name="BodyPart0" parent="Node2D2/Body" instance=ExtResource("3_i0hql")]
-position = Vector2(nan, 391)
-scale = Vector2(nan, nan)
-animation_offset = nan
-segment_offset = nan
-segment_scale = nan
+[node name="AnimationPlayer" type="AnimationPlayer" parent="UnlockLabelContainer"]
+root_node = NodePath("../..")
+libraries = {
+"": SubResource("AnimationLibrary_p204v")
+}
+
+[node name="UnlockedLabel" type="Label" parent="UnlockLabelContainer"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 173.0
+offset_top = 6.0
+offset_right = 265.0
+offset_bottom = 29.0
+mouse_filter = 1
+text = "WeeWiggler"
+
+[node name="SelectedCreatureLabel" type="Button" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(0, 16)
+offset_left = 11.0
+offset_top = 6.0
+offset_right = 341.0
+offset_bottom = 39.0
+theme_override_constants/outline_size = 0
+theme_override_constants/h_separation = 5
+theme_override_styles/focus = SubResource("StyleBoxEmpty_4ybjt")
+theme_override_styles/hover = ExtResource("5_4mrom")
+theme_override_styles/pressed = ExtResource("5_4mrom")
+theme_override_styles/normal = ExtResource("5_4mrom")
+button_mask = 0
+text = "WeeWiggler"
+icon = ExtResource("5_p8etf")
+alignment = 0
+expand_icon = true
+
+[node name="TooltipLabel" type="Label" parent="."]
+z_index = 1
+offset_left = 11.0
+offset_top = 51.0
+offset_right = 51.0
+offset_bottom = 84.0
+theme_override_styles/normal = ExtResource("5_4mrom")

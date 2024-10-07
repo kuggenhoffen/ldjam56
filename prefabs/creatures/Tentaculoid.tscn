@@ -1,0 +1,70 @@
+[gd_scene load_steps=9 format=3 uid="uid://g7wp11nqcqnx"]
+
+[ext_resource type="Script" path="res://scripts/Tentaculoid.gd" id="1_p5lip"]
+[ext_resource type="PackedScene" uid="uid://cyh14w1hcmpx5" path="res://prefabs/circle_body_tails.tscn" id="2_mtgo3"]
+[ext_resource type="Script" path="res://scripts/ContinuousMovement.gd" id="3_5xmbt"]
+[ext_resource type="Script" path="res://scripts/BodySegment.gd" id="3_xpfng"]
+
+[sub_resource type="Curve" id="Curve_k0g8c"]
+_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 1, Vector2(1, 0.5), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_d1eb6"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v4dex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mqjuc"]
+radius = 28.0
+
+[node name="Tentaculoid" type="CharacterBody2D" node_paths=PackedStringArray("body_parts", "consume_shape_casts")]
+collision_layer = 2
+motion_mode = 1
+script = ExtResource("1_p5lip")
+min_scale = 0.3
+body_parts = [NodePath("BodyPart0")]
+body_part_prefab = ExtResource("2_mtgo3")
+part_count = 1
+body_offset = SubResource("Curve_k0g8c")
+body_scale = SubResource("Curve_d1eb6")
+consume_shape_casts = [NodePath("ShapeCast2D"), NodePath("ShapeCast2D2"), NodePath("ShapeCast2D3")]
+
+[node name="Movement" type="Node" parent="." node_paths=PackedStringArray("creature")]
+script = ExtResource("3_5xmbt")
+creature = NodePath("..")
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+position = Vector2(-8, 0)
+rotation = 1.57079
+shape = SubResource("CircleShape2D_v4dex")
+target_position = Vector2(0.99996, 18)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="ShapeCast2D2" type="ShapeCast2D" parent="."]
+position = Vector2(-7, -2)
+rotation = 1.57079
+shape = SubResource("CircleShape2D_v4dex")
+target_position = Vector2(-14, 12)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="ShapeCast2D3" type="ShapeCast2D" parent="."]
+position = Vector2(-7, 2)
+rotation = 1.57079
+shape = SubResource("CircleShape2D_v4dex")
+target_position = Vector2(14, 12)
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="BodyPart0" type="CollisionShape2D" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("2_mtgo3")]
+top_level = true
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_mqjuc")
+script = ExtResource("3_xpfng")
+creature = NodePath("..")
+segment_offset = 0.25
+segment_scale = 0.5
+metadata/_edit_vertical_guides_ = [nan, nan, nan]
+metadata/_edit_horizontal_guides_ = [nan, nan, nan]

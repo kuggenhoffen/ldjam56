@@ -19,7 +19,6 @@ radius = 28.0
 [node name="WeeWiggler" type="CharacterBody2D" node_paths=PackedStringArray("body_parts")]
 position = Vector2(340, 223)
 collision_layer = 2
-input_pickable = true
 motion_mode = 1
 script = ExtResource("1_d0duy")
 body_parts = [NodePath("BodyPart0")]
@@ -34,11 +33,11 @@ creature = NodePath("..")
 
 [node name="BodyPart0" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_ee1qg")]
 position = Vector2(340, 223)
-scale = Vector2(0.0938693, 0.0938693)
+scale = Vector2(0.0868849, 0.0868849)
 shape = SubResource("CircleShape2D_g4le0")
 creature = NodePath("..")
-segment_offset = 0.0938693
-segment_scale = 0.0938693
+segment_offset = 0.0868849
+segment_scale = 0.0868849
 metadata/_edit_vertical_guides_ = [nan, nan, nan]
 metadata/_edit_horizontal_guides_ = [nan, nan, nan]
 

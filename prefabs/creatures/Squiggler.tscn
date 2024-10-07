@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://b65i1o46scfp4"]
+[gd_scene load_steps=9 format=3 uid="uid://b65i1o46scfp4"]
 
 [ext_resource type="Script" path="res://scripts/Squiggler.gd" id="1_mntb8"]
 [ext_resource type="PackedScene" uid="uid://dsnbjcg6nqkuo" path="res://prefabs/circle_body_whiskers.tscn" id="3_gd6hl"]
-[ext_resource type="Script" path="res://scripts/BodySegment.gd" id="4_sxdrn"]
 [ext_resource type="PackedScene" uid="uid://de0wpskonnour" path="res://prefabs/components/continuous_movement.tscn" id="4_vxudh"]
 
 [sub_resource type="Curve" id="Curve_8r7p2"]
@@ -24,9 +23,9 @@ height = 51.05
 radius = 28.0
 
 [node name="Squiggler" type="CharacterBody2D" node_paths=PackedStringArray("body_parts", "consume_shape_casts", "search_shape_casts")]
+top_level = true
 position = Vector2(496, 313)
 collision_layer = 2
-input_pickable = true
 motion_mode = 1
 script = ExtResource("1_mntb8")
 body_parts = [NodePath("BodyPart0"), NodePath("BodyPart1"), NodePath("BodyPart2"), NodePath("BodyPart3"), NodePath("BodyPart4")]
@@ -61,60 +60,58 @@ target_position = Vector2(67.17, 20)
 collide_with_areas = true
 collide_with_bodies = false
 
-[node name="BodyPart0" type="CollisionShape2D" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0, 0, 0)
+
+[node name="BodyPart0" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
 position = Vector2(496, 313)
 scale = Vector2(0.2, 0.2)
 shape = SubResource("CircleShape2D_mqjuc")
-script = ExtResource("4_sxdrn")
 creature = NodePath("..")
 segment_offset = 6.4
 segment_scale = 0.2
 metadata/_edit_vertical_guides_ = [nan, nan, nan]
 metadata/_edit_horizontal_guides_ = [nan, nan, nan]
 
-[node name="BodyPart1" type="CollisionShape2D" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
+[node name="BodyPart1" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
 position = Vector2(464, 313)
 scale = Vector2(0.2, 0.2)
 shape = SubResource("CircleShape2D_mqjuc")
-script = ExtResource("4_sxdrn")
 creature = NodePath("..")
-animation_offset = 0.870501
+animation_offset = 0.872572
 segment_offset = 6.4
 segment_scale = 0.2
 metadata/_edit_vertical_guides_ = [nan, nan, nan]
 metadata/_edit_horizontal_guides_ = [nan, nan, nan]
 
-[node name="BodyPart2" type="CollisionShape2D" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
+[node name="BodyPart2" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
 position = Vector2(432, 313)
 scale = Vector2(0.2, 0.2)
 shape = SubResource("CircleShape2D_mqjuc")
-script = ExtResource("4_sxdrn")
 creature = NodePath("..")
-animation_offset = 2.9329
+animation_offset = 2.8231
 segment_offset = 6.4
 segment_scale = 0.2
 metadata/_edit_vertical_guides_ = [nan, nan, nan]
 metadata/_edit_horizontal_guides_ = [nan, nan, nan]
 
-[node name="BodyPart3" type="CollisionShape2D" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
+[node name="BodyPart3" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
 position = Vector2(400, 313)
 scale = Vector2(0.2, 0.2)
 shape = SubResource("CircleShape2D_mqjuc")
-script = ExtResource("4_sxdrn")
 creature = NodePath("..")
-animation_offset = 4.54807
+animation_offset = 4.46361
 segment_offset = 6.4
 segment_scale = 0.2
 metadata/_edit_vertical_guides_ = [nan, nan, nan]
 metadata/_edit_horizontal_guides_ = [nan, nan, nan]
 
-[node name="BodyPart4" type="CollisionShape2D" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
+[node name="BodyPart4" parent="." node_paths=PackedStringArray("creature") instance=ExtResource("3_gd6hl")]
 position = Vector2(368, 313)
 scale = Vector2(0.2, 0.2)
 shape = SubResource("CircleShape2D_mqjuc")
-script = ExtResource("4_sxdrn")
 creature = NodePath("..")
-animation_offset = 4.97008
+animation_offset = 6.13974
 segment_offset = 6.4
 segment_scale = 0.2
 metadata/_edit_vertical_guides_ = [nan, nan, nan]

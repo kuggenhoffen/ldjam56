@@ -18,16 +18,22 @@ segment_scale = 1.0
 metadata/_edit_vertical_guides_ = [nan, nan, nan]
 metadata/_edit_horizontal_guides_ = [nan, nan, nan]
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="Node2D" type="Line2D" parent="."]
 position = Vector2(0, 24)
 rotation = 1.5708
+points = PackedVector2Array(0, 0, -3.62396e-05, -10, -7.24792e-05, -20, -0.000108719, -30, -0.000144958, -40, -0.000181198, -50)
+joint_mode = 2
+end_cap_mode = 2
 script = ExtResource("2_2381a")
 segment_length = 10.0
 segment_count = 5
 
-[node name="Node2D2" type="Node2D" parent="."]
+[node name="Node2D2" type="Line2D" parent="."]
 position = Vector2(0, -24)
 rotation = -1.5708
+points = PackedVector2Array(0, 0, -3.62396e-05, 10, -7.24792e-05, 20, -0.000108719, 30, -0.000144958, 40, -0.000181198, 50)
+joint_mode = 2
+end_cap_mode = 2
 script = ExtResource("2_2381a")
 segment_length = 10.0
 segment_count = 5
