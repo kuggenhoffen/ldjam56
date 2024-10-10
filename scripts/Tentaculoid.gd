@@ -27,6 +27,7 @@ func _ready():
 	next_target_position = random_position_in_viewport()
 	movement.creature = self
 	base_scale = min_scale
+	lifetime_add = 18.0
 	creature_update()
 	super._ready()
 
