@@ -66,7 +66,7 @@ func _physics_process(delta):
 				eat_types = [FleaFleck, SporeSprocket]
 
 		if check_consume_shapecast(eat_types, 100, true, size_level) > 0:
-			base_scale += 0.01
+			base_scale += 0.02
 			if base_scale > max_scale:
 				base_scale = max_scale
 			size_level = SizeLevel.values()[levels.bsearch(base_scale)]
