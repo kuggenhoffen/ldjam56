@@ -56,6 +56,7 @@ var size_level: SizeLevel = SizeLevel.SMALL:
 		if game_manager:
 			game_manager.creature_size_changed(self)
 var lifetime: float = 30
+var lifetime_add: float = 10.0
 var is_dead: bool = false
 var levels: Array = [0.0]
 var creature_type_index: int
@@ -140,7 +141,7 @@ func check_consume_shapecast(consume_types: Array[Variant], consume_distance: fl
 func consume_creature(creature: Creature):
 	creature.queue_free()
 	creature = null
-	lifetime += 10
+	lifetime += lifetime_add
 	if lifetime > max_lifetimes[size_level]:
 		lifetime = max_lifetimes[size_level]
 	consumed_creatures_count += 1

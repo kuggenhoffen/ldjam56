@@ -10,7 +10,7 @@ var viewport: Rect2
 @export var max_scale: float = 0.8
 var next_consume: float = 0
 var time_until_emit: float = 0
-const consume_interval: float = 20 * 1000
+const consume_interval: float = 15
 const emit_interval: float = 5.0
 var timer: float = 0
 
@@ -23,6 +23,7 @@ func _ready():
 	movement.default_speed = 2 + randf() * 15
 	movement.speed = movement.default_speed
 	base_scale = min_scale
+	lifetime_add = 18.0
 	super._ready()
 	viewport = get_viewport_rect()
 	creature_update()
